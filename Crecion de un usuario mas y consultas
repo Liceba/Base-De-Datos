@@ -1,0 +1,54 @@
+Super commit con cosultas y Un Usuario mas
+
+CREATE DATABASE IF NOT EXISTS Trabajo_web_GreenUp;
+USE Trabajo_web_GreenUp;
+
+CREATE TABLE IF NOT EXISTS Usuarios (
+    usuario_id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,  
+    password_hash VARCHAR(255) NOT NULL, 
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    activo BOOLEAN DEFAULT TRUE 
+);
+
+CREATE TABLE IF NOT EXISTS Perfiles (  --
+    perfil_id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT,    
+    nombre VARCHAR(50),
+    apellido VARCHAR(50),
+    fecha_nacimiento DATE,
+    
+   
+    FOREIGN KEY (usuario_id)  --  conector entre la tabla de Usuarios y Perfiles
+        REFERENCES Usuarios(usuario_id) 
+        ON DELETE CASCADE 
+);
+
+INSERT INTO Usuarios (email, password_hash) VALUES ('ltceba@web.com', '1234'); -- registro de Usuario 1
+INSERT INTO Perfiles (usuario_id, nombre, apellido, fecha_nacimiento) VALUES (1, 'Liceba', 'Ceballos', '2009-11-28'); 
+
+INSERT INTO Usuarios (email, password_hash) VALUES ('alejo.garcia@web.com', 'otro_hash_seguro'); -- registro de Usuario 
+INSERT INTO Perfiles (usuario_id, nombre, apellido, fecha_nacimiento) VALUES (2, 'Alejandro', 'García', '1998-05-10');
+
+SELECT u.email, p.nombre, p.apellido, fecha_registro, Activo FROM Usuarios u JOIN Perfiles p ON u.usuario_id = p.usuario_id WHERE u.usuario_id = 1; -- consultar datos del usuario 1
+SELECT u.email, p.nombre, p.apellido, fecha_registro, Activo FROM Usuarios u JOIN Perfiles p ON u.usuario_id = p.usuario_id WHERE u.usuario_id = 2; -- consultar datos del usuario 2
+
+SELECT usuario_id, password_hash, activo FROM Usuarios WHERE email = 'ltceba@web.com'; -- inicio de sesion (El inicio de sesion solo funciona media en el gmail)
+SELECT usuario_id, password_hash, activo FROM Usuarios WHERE email = 'Bianchi.email@web.com';
+
+UPDATE Usuarios SET email = 'Bianchi.email@web.com' WHERE usuario_id = 1; -- cambiar el gmail del usuario, ejemplo: Bianchi.email@web.com
+UPDATE Usuarios SET password_hash = '251150' WHERE usuario_id = 1;
+UPDATE perfiles SET nombre = 'Bianchi' WHERE usuario_id = 1;
+UPDATE perfiles SET apellido = 'Naz' WHERE usuario_id = 1;
+
+UPDATE Usuarios SET email = 'ale.email@web.com' WHERE usuario_id = 2; -- cambiar el gmail del usuario, ejemplo: Bianchi.email@web.com
+UPDATE Usuarios SET password_hash = '67094' WHERE usuario_id = 2;
+UPDATE perfiles SET nombre = 'alejandro' WHERE usuario_id = 2;
+UPDATE perfiles SET apellido = 'Molina' WHERE usuario_id = 2;
+
+DELETE FROM Perfiles WHERE usuario_id = 1; --  esto sirve para eliminar datos personales del usuario 1
+DELETE FROM Usuarios WHERE usuario_id = 1; -- esto sirve para eliminar el usuario 1 por completo 
+DELETE FROM Perfiles WHERE usuario_id = 2; --  esto sirve para eliminar datos personales del usuario 2
+DELETE FROM Usuarios WHERE usuario_id = 2; -- esto sirve para eliminar el usuario 2 por completo 
+
+DROP DATABASE Trabajo_web_GreenUp;  -- esto sirve para borra toda la Database por si tubiste un error...
